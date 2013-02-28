@@ -1,0 +1,92 @@
+<form NAME = "controlstester">
+	<table>
+		<tr>
+			<td>
+				UName:<input type=text Name="uname">
+			</td>
+			<td>
+				PW:<input type=password Name="pw">
+			</td>
+			<td rowspan=4 align=center valign=center>
+				<input type=button value="Clear" name="btnclear">
+				<input type=submit value="Submit" name="Submit">
+				<input type=reset value="Reset" name="Reset">
+			</td>
+			<td rowspan=4>
+				<textarea name="textarea" rows=15 cols=20></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>Multiple Select Items:<br>
+				<select multiple name="multselect">
+					<option value="muitem1">Item 1	
+					<option value="muitem2">Item 2	
+					<option value="muitem3">Item 3			
+			</td>
+			<td>Single Select Items:<br>
+				<select name="multselect">
+					<option value="snitem1">Item 1	
+					<option value="snitem2">Item 2	
+					<option value="snitem3">Item 3			
+			</td>
+		</tr>
+		<tr>
+			<td>Checkbox Items:<br>
+			<input type=checkbox name="chitems" value="chitem1">Item 1<br>
+			<input type=checkbox name="chitems" value="chitem2">Item 2<br>
+			<input type=checkbox name="chitems" value="chitem3">Item 3<br>
+			</td>
+			<td>Radio Items:<br>
+			<input type=radio name="rditems" value="rditem1">Item 1<br>
+			<input type=radio name="rditems" value="rditem2">Item 2<br>
+			<input type=radio name="rditems" value="rditem3">Item 3<br>
+			</td>
+		</tr>
+		<tr>
+			<td colspan=2>File Info: 
+			<input type=file name="file">
+			</td>
+		</tr>		
+	</table>
+</form>
+
+<script>
+
+function report(element, event) 
+{
+    var t = element.form.textarea;
+    var name = element.name;
+    if ((element.type == "select-one") || (element.type == "select-multiple")){
+        value = " ";
+        for(var i = 0; i < element.options.length; i++)
+            if (element.options[i].selected) 
+                value += element.options[i].value + " ";
+    }
+    else if (element.type == "textarea") value = "...";
+    else value = element.value;
+    var msg = event + ": " + name + ' (' + value + ')\n';
+    t.value = t.value + msg;
+}
+
+function addhandlers(f)
+{
+    for(var i = 0; i < f.elements.length; i++) {
+        var e = f.elements[i];
+        e.onclick = new Function("report(this, 'Click')");
+        e.onchange = new Function("report(this, 'Change')");
+        e.onfocus = new Function("report(this, 'Focus')");
+        e.onblur = new Function("report(this, 'Blur')");
+        e.onselect = new Function("report(this, 'Select')");
+    }
+
+    // Special case handlers for the buttons:
+    f.clearbutton.onclick = 
+        new Function("this.form.textarea.value=''; report(this, 'Click');");
+    f.submitbutton.onclick = 
+        new Function("report(this, 'Click'); return false");
+    f.resetbutton.onclick = 
+        new Function("this.form.reset(); report(this, 'Click'); return false");
+}
+
+addhandlers(document.controlstester);
+</script>
